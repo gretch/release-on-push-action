@@ -58,6 +58,7 @@
     {:related-prs           (:body (github/fetch-related-prs context))
      :commit                (:body (github/fetch-commit context))
      :latest-release        latest-release
+     :labels                (get-labels (:body (github/fetch-related-prs context)))
      :latest-release-commit (when-let [tag (:tag_name latest-release)]
                               (:body (github/fetch-commit (assoc context :sha tag))))}))
 
@@ -160,6 +161,7 @@
   [release-data]
   (printf "::set-output name=tag_name::%s\n" (set-output-escape (:tag_name release-data)))
   (printf "::set-output name=version::%s\n" (set-output-escape (:name release-data)))
+  (printf "::set-output name=labels::%s\n" (set-output-escape (:labels release-data)))
   (printf "::set-output name=body::%s\n" (set-output-escape (:body release-data))))
 
 (defn -main [& args]
